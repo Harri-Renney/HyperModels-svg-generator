@@ -1,5 +1,24 @@
-# SVG Creator Website
+# svg-creator-website
 
-A website that would allow for the creation of SVG MIDI layouts.
+## Project setup
+```
+npm install
+```
 
-https://github.com/muses-dmi
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
