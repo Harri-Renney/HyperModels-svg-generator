@@ -16,5 +16,10 @@ components: {
 <style>
     body {
         margin: 0;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    html {
+        background-color: #F4F4F9;
     }
 </style>
