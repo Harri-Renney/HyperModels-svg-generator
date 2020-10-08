@@ -1,6 +1,9 @@
 <template>
     <div class="top-menu-bar">
-        bar
+        <div id="top-menu-export-button">
+            <i class="mi-export"/>
+            Export
+        </div>
     </div>
 </template>
 
@@ -17,5 +20,10 @@ export default {
         background-color: darkgray;
         text-align: center;
         line-height: 50px;
+    }
+
+    i {
+        height: 24px;
+        width: 24px;
     }
 </style>
