@@ -1,16 +1,40 @@
 <template>
     <div class="top-menu-bar">
-        <span id="page-title">Annotated SVG Creator</span>
-        <button id="top-menu-export-button">
-            <i class="mi-export"/>
-            Export
-        </button>
+        <div class="top-menu-bar-controls">
+            <span id="page-title">Annotated SVG Creator</span>
+            <button id="top-menu-export-button" class="top-menu-control">
+                <i class="mi-export"/>
+                Export
+            </button>
+            <select id="device-selector" class="dropdown device-selector top-menu-control">
+                <option>Select Device</option>
+                <option>Sensel Morph</option>
+                <option>Roli Lightpad Block</option>
+                <option>Custom</option>
+                <option>None</option>
+            </select>
+            <button id="top-menu-cloud-save-button" class="top-menu-control">
+                <i class="mi-cloud-upload"/>
+                Save
+            </button>
+            <SignIn @toggle-sign-in-form="toggleSignInForm"/>
+        </div>
     </div>
 </template>
 
 <script>
+import SignIn from "./buttons/SignIn.vue";
+
 export default {
-    name: 'TopMenuBar'    
+    name: 'TopMenuBar',
+    components: {
+        SignIn,
+    },
+    methods: {
+        toggleSignInForm() {
+            this.$emit('toggle-sign-in-form')
+        }
+    }
 }
 </script>
 
@@ -20,29 +44,46 @@ export default {
         height: 50px;
         background-color: #586F7C;
         text-align: center;
-        position: relative;
+        min-width: 825px;
+        position: fixed;
+        top: 0;
     }
 
-    #top-menu-export-button {
+    .top-menu-control {
         height: 30px;
         font-size: 15px;
         border: none;
         border-radius: 5px;
         width: 100px;
-        position: absolute;
-        top: 10px;
         cursor: pointer;
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        background-color: #F4F4F9;
+
     }
 
-    #top-menu-export-button:hover {
+    .top-menu-bar-controls {
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+    }
+
+    select.top-menu-control {
+        width: 150px;
+    }
+    
+    .top-menu-control:hover {
         border: 1px solid black;
-        background-color: #F4F4F9;
     }
 
     #page-title {
         line-height: 50px;
-        position: absolute;
-        left: 5px;
+        text-align: left;
+        float: left;
+        position: relative;
+        left: 10px;
         font-weight: bold;
         font-size: 25px;
         color: #F4F4F9

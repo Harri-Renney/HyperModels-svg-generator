@@ -26,6 +26,11 @@ The color scheme for this application is as follows:
 
 `#F4F4F9 ghost white`
 
+Error Message: `#EF476F paradise pink`
+Warning Message: `#FFD166 orange yellow crayola`
+Success Message: `#06D6A0 carribbean green`
+Information Message: `#118AB2 blue ncs`
+
 ## Project setup
 ```
 npm install
