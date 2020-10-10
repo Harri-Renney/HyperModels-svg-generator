@@ -12,6 +12,28 @@ A further stretch goal could be to allow the users to log in to save and edit th
 
 When paired with these devices, such as the Sensel Morph, this website will allow users to seamlessly create custom overlays and commands suited to their needs, ready for integration with the device.
 
+# Color Scheme
+
+The color scheme for this application is as follows:
+
+`#000000 black`
+
+`#2F4550 charcoal`
+
+`#586F7C dark electric blue`
+
+`#B8DBD9 powder blue`
+
+`#F4F4F9 ghost white`
+
+Error Message: `#EF476F paradise pink`
+
+Warning Message: `#FFD166 orange yellow crayola`
+
+Success Message: `#06D6A0 carribbean green`
+
+Information Message: `#118AB2 blue ncs`
+
 ## Project setup
 ```
 npm install
