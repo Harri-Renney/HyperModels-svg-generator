@@ -19,6 +19,7 @@
 <script>
 
 import axios from 'axios'
+import qs from 'querystring'
 
 export default {
     name: 'SignInForm',
@@ -32,23 +33,33 @@ export default {
             response: ''
         }
     },
+    computed: {
+        requestBody() {
+            return {
+                username: this.username,
+                password: this.password
+            }
+        }
+    },
     methods: {
-        onSubmit() {
+        async onSubmit() {
+            // Make sure username and password are not empty
             if (this.username === '' || this.password === '') {
                 alert('You must enter your username and password to login')
                 return
             }
 
-            this.getResponse()
-
-            console.log(this.error)
+            // Call the API
+            await this.getResponse()
             
+            // Logic for response
             if (this.error === '') {
                 this.messageContent = 'Login successful for ' + this.username
                 this.messageType = 'success'
                 this.username = ''
                 this.password = ''
             } else if (this.error !== '') {
+                console.log(this.error)
                 this.messageContent = 'Login failed. Please try again'
                 this.messageType = 'error'
                 this.password = ''
@@ -57,13 +68,11 @@ export default {
             this.$emit('display-message', this.messageType, this.messageContent)
         },
         signIn() {
-            axios.defaults.headers.post['Content-Type'] = 'application/json;';
+            // Set Content-Type header
+            axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;';
 
-            return axios.post('http://localhost:8000/login', {
-                username: this.username,
-                password: this.password
-            });
-
+            // Call the API
+            return axios.post('http://localhost:8000/login', qs.stringify(this.requestBody));
         },
         async getResponse() {
             await this.signIn()
