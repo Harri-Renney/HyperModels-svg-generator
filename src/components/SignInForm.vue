@@ -19,7 +19,6 @@
 <script>
 
 import axios from 'axios'
-import qs from 'querystring'
 
 export default {
     name: 'SignInForm',
@@ -29,15 +28,27 @@ export default {
             password: '',
             messageType: '',
             messageContent: '',
-            error: '',
-            response: ''
+            error: {},
+            response: {},
+            user: {}
         }
     },
     computed: {
-        requestBody() {
+        auth() {
             return {
-                username: this.username,
-                password: this.password
+                auth: {
+                    username: btoa(this.username),
+                    password: btoa(this.password)
+                }
+            }
+        },
+        status() {
+            if (this.error.length !== 0) {
+                return this.error.response.status
+            } else if (this.response.length !== 0) {
+                return this.response.status
+            } else {
+                return 500;
             }
         }
     },
@@ -53,12 +64,21 @@ export default {
             await this.getResponse()
             
             // Logic for response
-            if (this.error === '') {
+            if (this.status == 200) {
+                this.user = this.response.user
                 this.messageContent = 'Login successful for ' + this.username
                 this.messageType = 'success'
                 this.username = ''
                 this.password = ''
-            } else if (this.error !== '') {
+                if (typeof(Storage) !== "undefined") {
+                    localStorage.setItem(btoa('token'), btoa(this.response.token))
+                    localStorage.setItem(btoa('user'), btoa(this.user))
+                    this.$emit('close-sign-in-form')
+                } else {
+                    this.messageType = 'error'
+                    this.messageContent = 'Sign in is not supported on your browser'
+                }
+            } else if (this.error !== 200) {
                 console.log(this.error)
                 this.messageContent = 'Login failed. Please try again'
                 this.messageType = 'error'
@@ -72,7 +92,7 @@ export default {
             axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;';
 
             // Call the API
-            return axios.post('http://localhost:8000/login', qs.stringify(this.requestBody));
+            return axios.get('http://localhost:8000/login', this.auth);
         },
         async getResponse() {
             await this.signIn()

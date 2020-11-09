@@ -4,7 +4,7 @@
     class="top-menu-control"
     @click="toggleSignInForm">
         <i class="mi-user"/>
-        Sign In
+        {{ signedIn }}
     </button>
 </template>
 
@@ -14,6 +14,11 @@ export default {
     methods: {
         toggleSignInForm() {
             this.$emit('toggle-sign-in-form')
+        }
+    },
+    computed: {
+        signedIn() {
+            return 'Sign In'
         }
     }
 }

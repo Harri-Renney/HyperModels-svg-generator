@@ -2,7 +2,7 @@
     <div class="top-menu-bar">
         <div class="top-menu-bar-controls">
             <span id="page-title">Annotated SVG Creator</span>
-            <button id="top-menu-export-button" class="top-menu-control">
+            <button id="top-menu-export-button" class="top-menu-control" @click="callApi">
                 <i class="mi-export"/>
                 Export
             </button>
@@ -24,17 +24,45 @@
 
 <script>
 import SignIn from "./buttons/SignIn.vue";
+import axios from 'axios'
 
 export default {
     name: 'TopMenuBar',
     components: {
         SignIn,
     },
+    data() {
+        return {
+            response: '',
+            error: ''
+        }
+    },
     methods: {
         toggleSignInForm() {
             this.$emit('toggle-sign-in-form')
+        },
+        test() {
+            axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;';
+
+            // Call the API
+            return axios.get('http://localhost:8000/test', {
+                headers: {
+                    Authorization: 'Bearer ' + atob(localStorage.getItem(btoa('token')))
+                }
+            });
+        },
+        async callApi() {
+            await this.test()
+                .then((response) => {
+                    this.response = response
+                    console.log(this.response)
+                    alert('Logged In')
+                })
+                .catch((error) => {
+                    this.error = error
+                })
         }
-    }
+    },
 }
 </script>
 

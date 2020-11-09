@@ -6,7 +6,10 @@
     enter-active-class="animate__animated animate__fadeInDown animate__faster"
     leave-active-class="animate__animated animate__fadeOutUp animate__faster"
     >
-    <SignInForm v-if="showSignInForm" @display-message="displayMessage"/>
+    <SignInForm 
+    v-if="showSignInForm"
+    @display-message="displayMessage"
+    @close-sign-in-form="showSignInForm = !showSignInForm"/>
     </transition>
     <transition
     name="show-hide-message"
