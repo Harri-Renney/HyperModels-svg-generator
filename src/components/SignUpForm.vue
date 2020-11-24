@@ -125,7 +125,7 @@ export default {
     height: 100%;
     width: 100%;
     background-color: #00000055;
-    z-index: 90;
+    z-index: 200;
 }
 
 form {
@@ -133,7 +133,7 @@ form {
     background-color: #F4F4F9;
     border: solid #B8DBD9 3px;
     border-radius: 2px;
-    z-index: 100;
+    z-index: 200;
     margin-left: auto;
     margin-right: auto
 }
@@ -171,7 +171,8 @@ input:focus {
 }
 
 .welcome-message {
-    margin: 10px;
+    margin-left: auto;
+    margin-right: auto;
     line-height: 50px;
     position: relative;
     left: 10px;
@@ -213,5 +214,9 @@ span .skip {
 .required {
     color: #EF476F;
     float: left;
+}
+
+#submit {
+    cursor: pointer;
 }
 </style>

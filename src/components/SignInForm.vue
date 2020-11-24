@@ -12,6 +12,10 @@
             <div class="item">
                 <input type="submit" id="submit" value="Sign In">
             </div>
+
+            <div class="item">
+                <input type="button" id="signup" value="Sign Up" @click="showSignUpForm">
+            </div>
         </form>
     </div>
 </template>
@@ -103,6 +107,9 @@ export default {
             .catch((error) => {
                 this.error = error
             })
+        },
+        showSignUpForm() {
+            this.$emit('show-sign-up-form')
         }
     }
 }
@@ -149,4 +156,7 @@ export default {
         padding: 5px;
     }
 
+    #signup {
+        cursor: pointer;
+    }
 </style>

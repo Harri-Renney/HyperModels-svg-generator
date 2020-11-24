@@ -10,7 +10,8 @@
     <SignInForm 
     v-if="showSignInForm"
     @display-message="displayMessage"
-    @close-sign-in-form="showSignInForm = !showSignInForm"/>
+    @close-sign-in-form="showSignInForm = !showSignInForm"
+    @show-sign-up-form="showSignUpForm = !showSignUpForm; showSignInForm = !showSignInForm;"/>
     </transition>
 
     <transition
@@ -70,15 +71,15 @@ export default {
             setTimeout(() => this.showMessage = false, 4000)
         },
         loggedIn() {
-            return localStorage.getItem(btoa('user') !== null)
+            console.log(localStorage.getItem(btoa('user')) !== null)
+            return (localStorage.getItem(btoa('user')) !== null)
         },
         displaySignUpForm() {
-            console.log('hello')
             this.showSignUpForm = true;
         }
     },
-    mounted() {
-        if (!this.loggedIn()) {
+    async mounted() {
+        if (await this.loggedIn() == false) {
             setTimeout(() => {
                 this.displaySignUpForm()
             }, 500);
