@@ -110,6 +110,7 @@ export default {
 
 <style scoped>
     .sign-in-form {
+        z-index: 105;
         position: absolute;
         top: 60px;
         right: 10px;

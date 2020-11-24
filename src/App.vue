@@ -1,6 +1,7 @@
 <template>
     <TopMenuBar @toggle-sign-in-form="showSignInForm = !showSignInForm"/>
     <LeftControlPicker />
+
     <transition
     name="show-hide-sign-in-form"
     enter-active-class="animate__animated animate__fadeInDown animate__faster"
@@ -11,6 +12,18 @@
     @display-message="displayMessage"
     @close-sign-in-form="showSignInForm = !showSignInForm"/>
     </transition>
+
+    <transition
+    name="show-hide-sign-up-form"
+    enter-active-class="animate__animated animate__fadeInDown animate__faster"
+    leave-active-class="animate__animated animate__fadeOutUp animate__faster">
+        <SignUpForm
+        v-if="showSignUpForm"
+        @close-signup-form="this.showSignUpForm = false"
+        >
+        </SignUpForm>
+    </transition>
+    
     <transition
     name="show-hide-message"
     enter-active-class="animate__animated animate__fadeInDown animate__faster"
@@ -25,10 +38,11 @@
 </template>
 
 <script>
-import TopMenuBar from "./components/TopMenuBar.vue";
-import LeftControlPicker from "./components/LeftControlPicker.vue";
+import TopMenuBar from "./components/TopMenuBar.vue"
+import LeftControlPicker from "./components/LeftControlPicker.vue"
 import SignInForm from "./components/SignInForm.vue"
 import Message from "./components/Message.vue"
+import SignUpForm from "./components/SignUpForm.vue"
 
 export default {
     name: "App",
@@ -36,14 +50,16 @@ export default {
         TopMenuBar,
         LeftControlPicker,
         SignInForm,
-        Message
+        Message,
+        SignUpForm
     },
     data() {
         return {
             showSignInForm: false,
             showMessage: false,
             messageType: '',
-            messageContent: ''
+            messageContent: '',
+            showSignUpForm: false
         }
     },
     methods: {
@@ -52,6 +68,20 @@ export default {
             this.messageContent = messageContent
             this.showMessage = true
             setTimeout(() => this.showMessage = false, 4000)
+        },
+        loggedIn() {
+            return localStorage.getItem(btoa('user') !== null)
+        },
+        displaySignUpForm() {
+            console.log('hello')
+            this.showSignUpForm = true;
+        }
+    },
+    mounted() {
+        if (!this.loggedIn()) {
+            setTimeout(() => {
+                this.displaySignUpForm()
+            }, 500);
         }
     }
 };

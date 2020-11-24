@@ -75,6 +75,7 @@ export default {
         min-width: 825px;
         position: fixed;
         top: 0;
+        z-index: 110;
     }
 
     .top-menu-control {
@@ -114,6 +115,6 @@ export default {
         left: 10px;
         font-weight: bold;
         font-size: 25px;
-        color: #F4F4F9
+        color: #F4F4F9;
     }
 </style>
