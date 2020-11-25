@@ -76,9 +76,14 @@ export default {
                 this.email = ''
                 this.password = ''
                 this.closeSignUpForm()
-            } else if (this.error !== 200) {
+            } else if (this.status == 400) {
+                alert(this.response)
+                this.messageContent = this.response.message
+                this.messageType = 'warning'
+                this.password = ''
+            } else if (this.error == 500) {
                 console.log(this.error)
-                this.messageContent = 'Login failed. Please try again'
+                this.messageContent = 'Something went wrong. Please try again'
                 this.messageType = 'error'
                 this.password = ''
             }
