@@ -68,6 +68,7 @@ export default {
             // Call the API
             await this.getResponse()
             
+
             // Logic for response
             if (this.status == 200) {
                 this.messageContent = 'Account created successfully. Please login.'
@@ -77,8 +78,7 @@ export default {
                 this.password = ''
                 this.closeSignUpForm()
             } else if (this.status == 400) {
-                alert(this.response)
-                this.messageContent = this.response.message
+                this.messageContent = this.response.data.message.toString()
                 this.messageType = 'warning'
                 this.password = ''
             } else if (this.error == 500) {
@@ -108,6 +108,9 @@ export default {
                 this.error = ''
             })
             .catch((error) => {
+                if (error.response) {
+                    this.response = error.response 
+                }
                 this.error = error
             })
         }

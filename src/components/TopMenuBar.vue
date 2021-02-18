@@ -6,12 +6,16 @@
                 <i class="mi-export"/>
                 Export
             </button>
-            <select id="device-selector" class="dropdown device-selector top-menu-control">
-                <option>Select Device</option>
-                <option>Sensel Morph</option>
-                <option>Roli Lightpad Block</option>
-                <option>Custom</option>
-                <option>None</option>
+            <select
+                id="device-selector"
+                class="dropdown device-selector top-menu-control"
+                @change="selectDevice"
+                v-model="device">
+                <option selected value="none">Select Device</option>
+                <option value="sensel-morph">Sensel Morph</option>
+                <option value="roli-lightpad-block">Roli Lightpad Block</option>
+                <option value="custom">Custom</option>
+                <option value="none">None</option>
             </select>
             <button id="top-menu-cloud-save-button" class="top-menu-control">
                 <i class="mi-cloud-upload"/>
@@ -34,10 +38,14 @@ export default {
     data() {
         return {
             response: '',
-            error: ''
+            error: '',
+            device: 'none',
         }
     },
     methods: {
+        selectDevice() {
+            this.$emit('change-device', this.device)
+        },
         toggleSignInForm() {
             this.$emit('toggle-sign-in-form')
         },
