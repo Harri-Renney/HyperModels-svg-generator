@@ -49,7 +49,7 @@ export default {
                     this.clearDevice()
                     break
             }
-            this.objects.forEach(object => this.canvas.bringToFront(object))
+            this.objects.forEach(object => this.canvas.bringToFront(object.object))
         },
         drawSenselMorph() {
             this.clearDevice()
@@ -134,7 +134,7 @@ export default {
 
             if (!device) {
                 this.canvas.setActiveObject(square)
-                this.objects.push({'square': square})
+                this.objects.push({'shape': 'square', 'object': square})
             } else {
                 square.hoverCursor = 'default'
                 this.device = square
@@ -166,7 +166,7 @@ export default {
             })
 
             this.canvas.add(circle)
-            this.objects.push({'circle': circle})
+            this.objects.push({'shape': 'circle', 'object': circle})
 
             this.canvas.renderAll()
         }
