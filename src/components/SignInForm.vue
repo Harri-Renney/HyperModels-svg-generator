@@ -95,8 +95,10 @@ export default {
             // Set Content-Type header
             axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;';
 
+            console.log(process.env.VUE_APP_SVG_API_URL + '/login')
+
             // Call the API
-            return axios.get('http://localhost:8000/login', this.auth);
+            return axios.get(process.env.VUE_APP_SVG_API_URL + '/login', this.auth);
         },
         async getResponse() {
             await this.signIn()
