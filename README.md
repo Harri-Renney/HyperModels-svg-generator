@@ -16,23 +16,21 @@ When paired with these devices, such as the Sensel Morph, this website will allo
 
 The color scheme for this application is as follows:
 
-`#000000 black`
+`#000000` black
 
-`#2F4550 charcoal`
+`#2F4550` charcoal
 
-`#586F7C dark electric blue`
+`#586F7C` dark electric blue
 
-`#B8DBD9 powder blue`
+`#B8DBD9` powder blue
 
-`#F4F4F9 ghost white`
+`#F4F4F9` ghost white
 
-Error Message: `#EF476F paradise pink`
+Error Message: `#EF476F` paradise pink
 
-Warning Message: `#FFD166 orange yellow crayola`
+Warning Message: `#FFD166` orange yellow crayola
 
-Success Message: `#06D6A0 carribbean green`
-
-Information Message: `#118AB2 blue ncs`
+Success Message: `#06D6A0` carribbean green
 
 ## Project setup
 ```
