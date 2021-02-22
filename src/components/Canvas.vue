@@ -82,7 +82,6 @@ export default {
             }
             
             canvas.on('object:moving', function(options) {
-                console.log(canvas.getObjects().indexOf(options.target))
                 options.target.set({
                     left: Math.round(options.target.left / grid) * grid,
                     top: Math.round(options.target.top / grid) * grid
@@ -114,9 +113,6 @@ export default {
                 width: width,
                 height: height,
                 fill: !device ? '#' + Math.floor(Math.random()*16777215).toString(16) : 'rgba(0, 0, 0, 0)',
-                stroke: '#' + Math.floor(Math.random()*16777215).toString(16),
-                strokeWidth: 5,
-                strokeUniform: true,
                 originX: 'left',
                 originY: 'top',
                 evented: true,
@@ -136,6 +132,9 @@ export default {
                 this.canvas.setActiveObject(square)
                 this.objects.push({'shape': 'square', 'object': square})
             } else {
+                square.stroke = '#' + Math.floor(Math.random()*16777215).toString(16)
+                square.strokeWidth = 5
+                square.strokeUniform = true
                 square.hoverCursor = 'default'
                 this.device = square
             }
@@ -149,9 +148,6 @@ export default {
                 width: width,
                 height: height,
                 fill: '#' + Math.floor(Math.random()*16777215).toString(16),
-                stroke: '#' + Math.floor(Math.random()*16777215).toString(16),
-                strokeWidth: 5,
-                strokeUniform: true,
                 originX: "left",
                 originY: "top",
                 evented: true,

@@ -21,7 +21,9 @@
                 <i class="mi-cloud-upload"/>
                 Save
             </button>
-            <SignIn @toggle-sign-in-form="toggleSignInForm"/>
+            <SignIn
+            ref="SignIn"
+            @toggle-sign-in-form="toggleSignInForm"/>
         </div>
     </div>
 </template>

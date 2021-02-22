@@ -1,6 +1,6 @@
 <template>
     <div class="sign-in-form">
-        <form @submit.prevent="onSubmit">
+        <form v-show="!signedInCheck" @submit.prevent="onSubmit">
             <div class="item">
                 <input type="text" id="username" v-model="username" placeholder="Username">
             </div>
@@ -17,13 +17,17 @@
                 <input type="button" id="signup" value="Sign Up" @click="showSignUpForm">
             </div>
         </form>
+        <form v-show="signedInCheck" @submit.prevent="onSubmit">
+            <div class="item">
+                <input type="button" id="logout" value="Log Out" @click="logout">
+            </div>
+        </form>
     </div>
 </template>
 
 <script>
 
 import axios from 'axios'
-
 export default {
     name: 'SignInForm',
     data() {
@@ -34,8 +38,12 @@ export default {
             messageContent: '',
             error: {},
             response: {},
-            user: {}
+            user: {},
+            signedInCheck: false,
         }
+    },
+    mounted() {
+        this.signedIn()
     },
     computed: {
         auth() {
@@ -76,8 +84,9 @@ export default {
                 this.password = ''
                 if (typeof(Storage) !== "undefined") {
                     localStorage.setItem(btoa('token'), btoa(this.response.token))
-                    localStorage.setItem(btoa('user'), btoa(this.user))
+                    localStorage.setItem(btoa('user'), btoa(JSON.stringify(this.user)))
                     this.$emit('close-sign-in-form')
+                    this.$emit('successful-sign-in')
                 } else {
                     this.messageType = 'error'
                     this.messageContent = 'Sign in is not supported on your browser'
@@ -95,8 +104,6 @@ export default {
             // Set Content-Type header
             axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;';
 
-            console.log(process.env.VUE_APP_SVG_API_URL + '/login')
-
             // Call the API
             return axios.get(process.env.VUE_APP_SVG_API_URL + '/login', this.auth);
         },
@@ -112,6 +119,13 @@ export default {
         },
         showSignUpForm() {
             this.$emit('show-sign-up-form')
+        },
+        logout() {
+            console.log("here")
+            this.$emit('show-logout-confirm')
+        },
+        signedIn() {
+            this.signedInCheck = localStorage.getItem(btoa('user')) !== null
         }
     }
 }
@@ -140,10 +154,10 @@ export default {
         border-bottom: 2px black solid;
     }
 
-    input:focus {
+    input[type='text'] :focus {
         border-bottom: 2px #586F7C solid;
     }
-
+    
     #submit {
         width: 100%;
         cursor: pointer;

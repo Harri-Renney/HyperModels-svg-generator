@@ -4,21 +4,27 @@
     class="top-menu-control"
     @click="toggleSignInForm">
         <i class="mi-user"/>
-        {{ signedIn }}
+        {{ buttonText }}
     </button>
 </template>
 
 <script>
 export default {
     name: 'SignIn',
+    data() {
+        return {
+            buttonText: 'Sign In',
+        }
+    },
+    mounted() {
+        this.signIn()
+    },
     methods: {
         toggleSignInForm() {
             this.$emit('toggle-sign-in-form')
-        }
-    },
-    computed: {
-        signedIn() {
-            return 'Sign In'
+        },
+        signIn() {
+            this.buttonText = localStorage.getItem(btoa('user')) !== null ? JSON.parse(atob(localStorage.getItem(btoa('user')))).username : 'Sign In'
         }
     }
 }

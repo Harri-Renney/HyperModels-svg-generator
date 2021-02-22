@@ -77,7 +77,7 @@ export default {
         text-align: center;
         border: 1px solid black;
         border-radius: 1px;
-        position: relative;
+        z-index: 9999999999;
     }
 
     .message-type-icon {
