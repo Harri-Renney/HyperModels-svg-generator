@@ -1,9 +1,10 @@
 <template>
     <!-- Top Menu Bar (Title, Export/Device/Save, Signin/Logout) -->
     <TopMenuBar
-    ref="topMenuBar"
+    ref="TopMenuBar"
     @toggle-sign-in-form="showSignInForm = !showSignInForm"
-    @change-device="changeDevice"/>
+    @change-device="changeDevice"
+    :loggedIn="loggedIn()"/>
 
     <!-- Side bar panel to add controls to the canvas -->
     <LeftControlPicker 
@@ -20,7 +21,9 @@
     v-if="showSignInForm"
     @display-message="displayMessage"
     @close-sign-in-form="showSignInForm = !showSignInForm"
-    @show-sign-up-form="showSignUpForm = !showSignUpForm; showSignInForm = !showSignInForm;"/>
+    @show-sign-up-form="showSignUpForm = !showSignUpForm; showSignInForm = !showSignInForm;"
+    @successful-sign-in="successfulSignIn"
+    @show-logout-confirm="this.showLogoutConfirm = true"/>
     </transition>
 
     <!-- Sign up form (shown when signup-button is pressed or if no account detected from cookies) -->
@@ -32,6 +35,18 @@
         @display-message="displayMessage"
         v-if="showSignUpForm"
         @close-signup-form="this.showSignUpForm = false"/>
+    </transition>
+
+    <!-- Logout Confirm (shown when user tries to logout) -->
+    <transition
+    name="show-hide-logout-confirm"
+    enter-active-class="animate__animated animate__fadeInDown animate__faster"
+    leave-active-class="animate__animated animate__fadeOutUp animate__faster">
+        <LogoutConfirm
+        @display-message="displayMessage"
+        v-if="showLogoutConfirm"
+        @logout="logout"
+        @close-logout-confirm="this.showLogoutConfirm = false"/>
     </transition>
     
     <!-- Custom Device Size Form (shown when selecting 'Custom' in Top Menu Bar dropdown) -->
@@ -73,6 +88,7 @@ import Message from "./components/Message.vue"
 import SignUpForm from "./components/SignUpForm.vue"
 import Canvas from "./components/Canvas.vue"
 import CustomSizeForm from "./components/CustomSizeForm.vue"
+import LogoutConfirm from "./components/LogoutConfirm.vue"
 
 export default {
     name: "App",
@@ -83,7 +99,8 @@ export default {
         Message,
         SignUpForm,
         Canvas,
-        CustomSizeForm
+        CustomSizeForm,
+        LogoutConfirm,
     },
     data() {
         return {
@@ -94,6 +111,7 @@ export default {
             showSignUpForm: false,
             showCustomSizeForm: false,
             custom_size: null,
+            showLogoutConfirm: false,
         }
     },
     methods: {
@@ -118,6 +136,14 @@ export default {
         addCircle() {
             this.$refs.canvas.addCircle()
         },
+        successfulSignIn() {
+            this.$refs.TopMenuBar.$refs.SignIn.signIn()
+        },
+        logout() {
+            localStorage.clear()
+            this.showSignInForm = false
+            this.$refs.TopMenuBar.$refs.SignIn.signIn()
+        }
     },
     async mounted() {
         if (await this.loggedIn() == false) {

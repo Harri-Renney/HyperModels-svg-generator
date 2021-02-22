@@ -21,7 +21,9 @@
                 <i class="mi-cloud-upload"/>
                 Save
             </button>
-            <SignIn @toggle-sign-in-form="toggleSignInForm"/>
+            <SignIn
+            ref="SignIn"
+            @toggle-sign-in-form="toggleSignInForm"/>
         </div>
     </div>
 </template>
@@ -53,7 +55,7 @@ export default {
             axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;';
 
             // Call the API
-            return axios.get('http://localhost:8000/test', {
+            return axios.get(process.env.VUE_APP_SVG_API_URL + '/test', {
                 headers: {
                     Authorization: 'Bearer ' + atob(localStorage.getItem(btoa('token')))
                 }

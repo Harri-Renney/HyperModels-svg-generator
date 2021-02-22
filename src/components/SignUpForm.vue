@@ -95,7 +95,7 @@ export default {
             axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;';
 
             // Call the API
-            return axios.post('http://localhost:8000/signup', qs.stringify({
+            return axios.post(process.env.VUE_APP_SVG_API_URL + '/signup', qs.stringify({
                 username: this.username,
                 email: this.email,
                 password: this.password
