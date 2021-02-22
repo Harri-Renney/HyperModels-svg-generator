@@ -46,7 +46,7 @@
         @display-message="displayMessage"
         v-if="showLogoutConfirm"
         @logout="logout"
-        @close-logout-confirm="this.showLogoutConfirm = false"/>
+        @close-logout-confirm="this.showLogoutConfirm = false; this.showSignInForm = false"/>
     </transition>
     
     <!-- Custom Device Size Form (shown when selecting 'Custom' in Top Menu Bar dropdown) -->
