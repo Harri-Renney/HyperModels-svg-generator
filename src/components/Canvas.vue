@@ -54,18 +54,18 @@ export default {
         drawSenselMorph() {
             this.clearDevice()
             // Sensel Morph is 23cm x 13cm | 1 grid sqaure is 1cm
-            this.addSquare(23 * 50, 13 * 50, true)
+            this.addSquare(23 * 50, 13 * 50, true, null, null)
         },
         drawRoliLightpadBlock() {
             this.clearDevice()
             // Roli Lightpad Block is 15 LEDs x 15 LEDs | 1 grid square is 1 LED
-            this.addSquare(15 * 50, 15 * 50, true)
+            this.addSquare(15 * 50, 15 * 50, true, null, null)
         },
         showCustomSizeForm() {
             this.$emit('show-custom-size-form')
         },
         drawCustomDevice(width, height) {
-            this.addSquare(width * 50, height * 50, true)
+            this.addSquare(width * 50, height * 50, true, null, null)
         },
         clearDevice() {
             this.canvas.remove(this.device)
@@ -106,13 +106,18 @@ export default {
                 this.canvas.requestRenderAll()
             })
         },
-        addSquare(width = 100, height = 100, device = false) {
+        addControl(color, size, type, shape) {
+            if (shape == 'square') {
+                this.addSquare(size * 50, size * 50, false, color, type)
+            }
+        },
+        addSquare(width = 100, height = 100, device = false, color, type) {
             var square = new fabric.Rect({
                 left: 200,
                 top: 100,
                 width: width,
                 height: height,
-                fill: !device ? '#' + Math.floor(Math.random()*16777215).toString(16) : 'rgba(0, 0, 0, 0)',
+                fill: !device ? color : 'rgba(0, 0, 0, 0)',
                 originX: 'left',
                 originY: 'top',
                 evented: true,
@@ -120,6 +125,7 @@ export default {
                 cornerStyle: 'circle',
                 hasRotatingPoint: false,
                 selectable: !device,
+                inter_type: type,
             })
 
             square.setControlsVisibility({

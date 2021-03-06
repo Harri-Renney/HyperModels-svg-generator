@@ -1,19 +1,17 @@
 <template>
     <div class="left-control-picker">
-        <button class="square" @click="addSquare()">Add Square</button>
-        <button class="circle" @click="addCircle()">Add Circle</button>
+        <ControlEditor @add-control="addControl"/>
     </div>
 </template>
 
 <script>
+import ControlEditor from './ControlEditor.vue'
 export default {
+  components: { ControlEditor },
     name: 'LeftControlPicker',
     methods: {
-        addSquare() {
-            this.$emit('add-square-to-canvas')
-        },
-        addCircle() {
-            this.$emit('add-circle-to-canvas')
+        addControl(color, size, type, shape) {
+            this.$emit('add-control', color, size, type, shape)
         }
     }
 }
