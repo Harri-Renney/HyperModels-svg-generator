@@ -14,7 +14,15 @@ export default {
             canvas_width: 0,
             canvas: null,
             device: null,
-            objects: []
+            objects: [],
+            empty_annotations: {
+                osc_address: null,
+                osc_args: null,
+                min: null,
+                max: null,
+                init: null,
+                incr: null,
+            }
         }
     },
     mounted() {
@@ -54,18 +62,18 @@ export default {
         drawSenselMorph() {
             this.clearDevice()
             // Sensel Morph is 23cm x 13cm | 1 grid sqaure is 1cm
-            this.addSquare(23 * 50, 13 * 50, true)
+            this.addSquare(23 * 50, 13 * 50, true, null, null, this.empty_annotations)
         },
         drawRoliLightpadBlock() {
             this.clearDevice()
             // Roli Lightpad Block is 15 LEDs x 15 LEDs | 1 grid square is 1 LED
-            this.addSquare(15 * 50, 15 * 50, true)
+            this.addSquare(15 * 50, 15 * 50, true, null, null, this.empty_annotations)
         },
         showCustomSizeForm() {
             this.$emit('show-custom-size-form')
         },
         drawCustomDevice(width, height) {
-            this.addSquare(width * 50, height * 50, true)
+            this.addSquare(width * 50, height * 50, true, null, null, this.empty_annotations)
         },
         clearDevice() {
             this.canvas.remove(this.device)
@@ -87,7 +95,7 @@ export default {
                     top: Math.round(options.target.top / grid) * grid
                 })
             })
-            
+
             this.canvas = canvas
 
             const helperObj = new fabric.Object({})    //abstract invisible object
@@ -106,13 +114,29 @@ export default {
                 this.canvas.requestRenderAll()
             })
         },
-        addSquare(width = 100, height = 100, device = false) {
+        addControl(color, size, type, shape, annotations) {
+            switch (shape) {
+                case 'square':
+                    this.addSquare(size * 50, size * 50, false, color, type, annotations)
+                    break
+                case 'circle':
+                    this.addCircle(size * 50, size * 50, color, type, annotations)
+                    break
+                case 'triangle':
+                    this.addTriangle(size * 50, size * 50, color, type, annotations)
+                    break
+                case 'ring':
+                    this.addRing(size * 50, size * 50, color, type, annotations)
+                    break
+            }
+        },
+        addSquare(width = 100, height = 100, device = false, color, type, annotations) {
             var square = new fabric.Rect({
                 left: 200,
-                top: 100,
+                top: 50,
                 width: width,
                 height: height,
-                fill: !device ? '#' + Math.floor(Math.random()*16777215).toString(16) : 'rgba(0, 0, 0, 0)',
+                fill: !device ? color : 'rgba(0, 0, 0, 0)',
                 originX: 'left',
                 originY: 'top',
                 evented: true,
@@ -120,6 +144,13 @@ export default {
                 cornerStyle: 'circle',
                 hasRotatingPoint: false,
                 selectable: !device,
+                inter_type: type,
+                inter_osc_address: annotations.osc_address,
+                inter_osc_args: annotations.osc_args,
+                min: annotations.min,
+                max: annotations.max,
+                init: annotations.init,
+                incr: annotations.incr,
             })
 
             square.setControlsVisibility({
@@ -141,20 +172,26 @@ export default {
 
             this.canvas.renderAll()
         },
-        addCircle(width = 50, height = 50) {
+        addCircle(width = 50, height = 50, color, type, annotations) {
             var circle = new fabric.Circle({
                 left: 200,
                 top: 200,
                 width: width,
                 height: height,
-                fill: '#' + Math.floor(Math.random()*16777215).toString(16),
+                fill: color,
                 originX: "left",
                 originY: "top",
                 evented: true,
                 transparentCorners: false,
                 cornerStyle: 'circle',
-                radius: 50,
+                radius: width / 2,
                 hasRotatingPoint: false,
+                inter_type: type,
+                inter_osc_args: annotations.osc_args,
+                min: annotations.min,
+                max: annotations.max,
+                init: annotations.init,
+                incr: annotations.incr,
             })
 
             circle.setControlsVisibility({
@@ -165,7 +202,70 @@ export default {
             this.objects.push({'shape': 'circle', 'object': circle})
 
             this.canvas.renderAll()
-        }
+        },
+        addTriangle(width = 50, height = 50, color, type, annotations) {
+            var triangle = new fabric.Triangle({
+                left: 200,
+                top: 200,
+                width: width,
+                height: height,
+                fill: color,
+                originX: "left",
+                originY: "top",
+                evented: true,
+                transparentCorners: false,
+                cornerStyle: 'circle',
+                hasRotatingPoint: false,
+                inter_type: type,
+                inter_osc_args: annotations.osc_args,
+                min: annotations.min,
+                max: annotations.max,
+                init: annotations.init,
+                incr: annotations.incr,
+            })
+
+            triangle.setControlsVisibility({
+                mtr: false,
+            })
+
+            this.canvas.add(triangle)
+            this.objects.push({'shape': 'triangle', 'object': triangle})
+
+            this.canvas.renderAll()
+        },
+        addRing(width = 50, height = 50, color, type, annotations) {
+            var ring = new fabric.Circle({
+                left: 200,
+                top: 200,
+                width: width,
+                height: height,
+                fill: "rgba(0, 0, 0, 0)",
+                stroke: color,
+                strokeWidth: width / 2.5,
+                originX: "left",
+                originY: "top",
+                evented: true,
+                transparentCorners: false,
+                cornerStyle: 'circle',
+                radius: width / 3.3,
+                hasRotatingPoint: false,
+                inter_type: type,
+                inter_osc_args: annotations.osc_args,
+                min: annotations.min,
+                max: annotations.max,
+                init: annotations.init,
+                incr: annotations.incr,
+            })
+
+            ring.setControlsVisibility({
+                mtr: false,
+            })
+
+            this.canvas.add(ring)
+            this.objects.push({'shape': 'ring', 'object': ring})
+
+            this.canvas.renderAll()
+        },
     }
 }
 </script>

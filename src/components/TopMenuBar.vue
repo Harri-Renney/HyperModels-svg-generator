@@ -86,6 +86,9 @@ export default {
         position: fixed;
         top: 0;
         z-index: 110;
+        -webkit-box-shadow: 0px -23px 77px 2px rgba(0,0,0,0.85);
+        -moz-box-shadow: 0px -23px 77px 2px rgba(0,0,0,0.85);
+        box-shadow: 0px -23px 77px 2px rgba(0,0,0,0.85);
     }
 
     .top-menu-control {

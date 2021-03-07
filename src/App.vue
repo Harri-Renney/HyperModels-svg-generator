@@ -8,8 +8,7 @@
 
     <!-- Side bar panel to add controls to the canvas -->
     <LeftControlPicker 
-        @add-square-to-canvas="addSquare()"
-        @add-circle-to-canvas="addCircle()"/>
+    @add-control="addControl"/>
 
     <!-- Sign in form (shown when login-button is pressed) -->
     <transition
@@ -130,11 +129,8 @@ export default {
         displaySignUpForm() {
             this.showSignUpForm = true;
         },
-        addSquare() {
-            this.$refs.canvas.addSquare()
-        },
-        addCircle() {
-            this.$refs.canvas.addCircle()
+        addControl(color, size, type, shape, annotations) {
+            this.$refs.canvas.addControl(color, size, type, shape, annotations)
         },
         successfulSignIn() {
             this.$refs.TopMenuBar.$refs.SignIn.signIn()
