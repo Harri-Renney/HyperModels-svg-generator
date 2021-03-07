@@ -10,8 +10,8 @@ export default {
   components: { ControlEditor },
     name: 'LeftControlPicker',
     methods: {
-        addControl(color, size, type, shape) {
-            this.$emit('add-control', color, size, type, shape)
+        addControl(color, size, type, shape, annotations) {
+            this.$emit('add-control', color, size, type, shape, annotations)
         }
     }
 }

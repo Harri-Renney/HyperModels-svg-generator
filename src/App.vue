@@ -129,8 +129,8 @@ export default {
         displaySignUpForm() {
             this.showSignUpForm = true;
         },
-        addControl(color, size, type, shape) {
-            this.$refs.canvas.addControl(color, size, type, shape)
+        addControl(color, size, type, shape, annotations) {
+            this.$refs.canvas.addControl(color, size, type, shape, annotations)
         },
         successfulSignIn() {
             this.$refs.TopMenuBar.$refs.SignIn.signIn()
