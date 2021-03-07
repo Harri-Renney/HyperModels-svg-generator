@@ -121,12 +121,19 @@ export default {
                     break
                 case 'circle':
                     this.addCircle(size * 50, size * 50, color, type, annotations)
+                    break
+                case 'triangle':
+                    this.addTriangle(size * 50, size * 50, color, type, annotations)
+                    break
+                case 'ring':
+                    this.addRing(size * 50, size * 50, color, type, annotations)
+                    break
             }
         },
         addSquare(width = 100, height = 100, device = false, color, type, annotations) {
             var square = new fabric.Rect({
                 left: 200,
-                top: 100,
+                top: 50,
                 width: width,
                 height: height,
                 fill: !device ? color : 'rgba(0, 0, 0, 0)',
@@ -195,7 +202,70 @@ export default {
             this.objects.push({'shape': 'circle', 'object': circle})
 
             this.canvas.renderAll()
-        }
+        },
+        addTriangle(width = 50, height = 50, color, type, annotations) {
+            var triangle = new fabric.Triangle({
+                left: 200,
+                top: 200,
+                width: width,
+                height: height,
+                fill: color,
+                originX: "left",
+                originY: "top",
+                evented: true,
+                transparentCorners: false,
+                cornerStyle: 'circle',
+                hasRotatingPoint: false,
+                inter_type: type,
+                inter_osc_args: annotations.osc_args,
+                min: annotations.min,
+                max: annotations.max,
+                init: annotations.init,
+                incr: annotations.incr,
+            })
+
+            triangle.setControlsVisibility({
+                mtr: false,
+            })
+
+            this.canvas.add(triangle)
+            this.objects.push({'shape': 'triangle', 'object': triangle})
+
+            this.canvas.renderAll()
+        },
+        addRing(width = 50, height = 50, color, type, annotations) {
+            var ring = new fabric.Circle({
+                left: 200,
+                top: 200,
+                width: width,
+                height: height,
+                fill: "rgba(0, 0, 0, 0)",
+                stroke: color,
+                strokeWidth: width / 2.5,
+                originX: "left",
+                originY: "top",
+                evented: true,
+                transparentCorners: false,
+                cornerStyle: 'circle',
+                radius: width / 3.3,
+                hasRotatingPoint: false,
+                inter_type: type,
+                inter_osc_args: annotations.osc_args,
+                min: annotations.min,
+                max: annotations.max,
+                init: annotations.init,
+                incr: annotations.incr,
+            })
+
+            ring.setControlsVisibility({
+                mtr: false,
+            })
+
+            this.canvas.add(ring)
+            this.objects.push({'shape': 'ring', 'object': ring})
+
+            this.canvas.renderAll()
+        },
     }
 }
 </script>

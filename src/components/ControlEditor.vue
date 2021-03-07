@@ -1,86 +1,73 @@
 <template>
     <div class="control-editor-container">
         <div class="control-editor">
-            <div class="always-show">
-                <div class="item">
-                    <label for="color-picker" class="label">Colour:</label>
-                    <input class="color-picker" type="color" v-model="color"/>
-                </div>
-
-                <div class="item">
-                    <label for="size-picker" class="label">Size:</label>
-                    <input type="number" min="1" max="9" v-model="size" class="size-picker"/>
-                </div>
-
-                <div class="item">
-                    <label for="shape-picker" class="label">Control Shape:</label>
-                    <select
-                        id="shape-picker-dropwdown"
-                        class="dropdown shape-picker"
-                        v-model="controlshape">
-                        <option selected value="square">Square</option>
-                        <option value="circle">Circle</option>
-                        <option value="triangle">Triangle</option>
-                        <option value="ring">Ring</option>
-                    </select>
-                </div>
-
-                <div class="item">
-                    <label for="control-picker" class="label">Control Type:</label>
-                    <select
-                        id="control-picker-dropwdown"
-                        class="dropdown control-picker"
-                        v-model="controltype">
-                        <option selected value="pad">Pad</option>
-                        <option value="slider">Slider</option>
-                        <option value="endless">Endless</option>
-                    </select>
-                </div>
-
-                <div class="item">
-                    <span class="button" @click="expandCollapse">
-                        <i :class="expandCollapseIcon"/>
-                        Annotations
-                    </span>
-                </div>
+            <div class="item color-editor">
+                <label for="color-picker" class="label">Colour:</label>
+                <input class="color-picker" type="color" v-model="color"/>
+                <input class="color-text" type="text" v-model="color"/>
             </div>
 
-            <transition
-            name="expand-extra-fields"
-            enter-active-class="animate__animated animate__fadeInDown animate__faster"
-            leave-active-class="animate__animated animate__fadeOutUp animate__faster">
-                <div class="expanded-section" v-if="expand">
-                    <div class="item">
-                        <label for="osc-address" class="label">OSC Address:</label>
-                        <input type="text" v-model="annotations.osc_address" class="text-input"/>
-                    </div>
+            <div class="item">
+                <label for="size-picker" class="label">Size:</label>
+                <input type="number" min="1" max="9" v-model="size" class="size-picker"/>
+            </div>
 
-                    <div class="item">
-                        <label for="osc-args" class="label">OSC Arguments:</label>
-                        <input type="text" v-model="annotations.ocs_args" class="text-input"/>
-                    </div>
+            <div class="item">
+                <label for="shape-picker" class="label">Control Shape:</label>
+                <select
+                    id="shape-picker-dropwdown"
+                    class="dropdown shape-picker"
+                    v-model="controlshape">
+                    <option selected value="square">Square</option>
+                    <option value="circle">Circle</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="ring">Ring</option>
+                </select>
+            </div>
 
-                    <div class="item">
-                        <label for="min" class="label">Minimum Value:</label>
-                        <input type="text" v-model="annotations.min" class="text-input"/>
-                    </div>
+            <div class="item">
+                <label for="control-picker" class="label">Control Type:</label>
+                <select
+                    id="control-picker-dropwdown"
+                    class="dropdown control-picker"
+                    v-model="controltype">
+                    <option selected value="pad">Pad</option>
+                    <option value="slider">Slider</option>
+                    <option value="endless">Endless</option>
+                </select>
+            </div>
 
-                    <div class="item">
-                        <label for="max" class="label">Maximum Value:</label>
-                        <input type="text" v-model="annotations.max" class="text-input"/>
-                    </div>
-
-                    <div class="item">
-                        <label for="init" class="label">Initial Value:</label>
-                        <input type="text" v-model="annotations.init" class="text-input"/>
-                    </div>
-                    
-                    <div class="item">
-                        <label for="incr" class="label">Increment Value:</label>
-                        <input type="text" v-model="annotations.incr" class="text-input"/>
-                    </div>
+            <div class="annotations">
+                <div class="item">
+                    <label for="osc-address" class="label">OSC Address:</label>
+                    <input type="text" v-model="annotations.osc_address" class="text-input"/>
                 </div>
-            </transition>
+
+                <div class="item">
+                    <label for="osc-args" class="label">OSC Arguments:</label>
+                    <input type="text" v-model="annotations.ocs_args" class="text-input"/>
+                </div>
+
+                <div class="item">
+                    <label for="min" class="label">Minimum Value:</label>
+                    <input type="text" v-model="annotations.min" class="text-input"/>
+                </div>
+
+                <div class="item">
+                    <label for="max" class="label">Maximum Value:</label>
+                    <input type="text" v-model="annotations.max" class="text-input"/>
+                </div>
+
+                <div class="item">
+                    <label for="init" class="label">Initial Value:</label>
+                    <input type="text" v-model="annotations.init" class="text-input"/>
+                </div>
+                
+                <div class="item">
+                    <label for="incr" class="label">Increment Value:</label>
+                    <input type="text" v-model="annotations.incr" class="text-input"/>
+                </div>
+            </div>
 
             <div class="item always-show add">
                 <span class="button" @click="addControl">
@@ -132,19 +119,26 @@ export default {
 </script>
 
 <style scoped>
-
-.expanded-section {
-    z-index: -1;
-}
-
-.always-show {
-    z-index: 10;
+.color-editor {
+    height: 90px !important;
 }
 
 .control-editor-container {
     width: 100%;
     position: relative;
     top: 60px;
+}
+
+input[type="text"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+    height: 35px;
+    outline: none;
+    background-color: #F4F4F9;
+    border: none;
+    border-bottom: 2px black solid;
+    border-radius: 2px;
 }
 
 input[type="color"] {
@@ -229,6 +223,7 @@ input[type="number"]::-webkit-inner-spin-button {
     margin-top: 5px;
     height: 55px;
     width: 100%;
+    margin-bottom: 10px;
 }
 
 .control-picker {
@@ -252,8 +247,12 @@ input[type="number"]::-webkit-inner-spin-button {
     width: 90px;
 }
 
-.expanded-section .label {
+.annotations .label {
     line-height: 20px;
+}
+
+.annotations .item {
+    height: 65px;
 }
 
 </style>
