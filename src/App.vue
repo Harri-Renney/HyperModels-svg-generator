@@ -4,6 +4,7 @@
     ref="TopMenuBar"
     @toggle-sign-in-form="showSignInForm = !showSignInForm"
     @change-device="changeDevice"
+    @show-export-menu="showExportMenu = !showExportMenu"
     :loggedIn="loggedIn()"/>
 
     <!-- Side bar panel to add controls to the canvas -->
@@ -34,6 +35,17 @@
         @display-message="displayMessage"
         v-if="showSignUpForm"
         @close-signup-form="this.showSignUpForm = false"/>
+    </transition>
+
+    <!-- Sign up form (shown when signup-button is pressed or if no account detected from cookies) -->
+    <transition
+    name="show-hide-export-menu"
+    enter-active-class="animate__animated animate__fadeInDown animate__faster"
+    leave-active-class="animate__animated animate__fadeOutUp animate__faster">
+        <ExportMenu
+        @display-message="displayMessage"
+        v-if="showExportMenu"
+        @close-export-menu="this.showExportMenu = false"/>
     </transition>
 
     <!-- Logout Confirm (shown when user tries to logout) -->
@@ -88,6 +100,7 @@ import SignUpForm from "./components/SignUpForm.vue"
 import Canvas from "./components/Canvas.vue"
 import CustomSizeForm from "./components/CustomSizeForm.vue"
 import LogoutConfirm from "./components/LogoutConfirm.vue"
+import ExportMenu from "./components/ExportMenu.vue"
 
 export default {
     name: "App",
@@ -100,6 +113,7 @@ export default {
         Canvas,
         CustomSizeForm,
         LogoutConfirm,
+        ExportMenu,
     },
     data() {
         return {
@@ -111,6 +125,7 @@ export default {
             showCustomSizeForm: false,
             custom_size: null,
             showLogoutConfirm: false,
+            showExportMenu: false,
         }
     },
     methods: {

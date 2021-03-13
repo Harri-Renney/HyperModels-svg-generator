@@ -63,11 +63,13 @@ export default {
             this.clearDevice()
             // Sensel Morph is 23cm x 13cm | 1 grid sqaure is 1cm
             this.addSquare(23 * 50, 13 * 50, true, null, null, this.empty_annotations)
+            this.device.name = 'sensel'
         },
         drawRoliLightpadBlock() {
             this.clearDevice()
             // Roli Lightpad Block is 15 LEDs x 15 LEDs | 1 grid square is 1 LED
             this.addSquare(15 * 50, 15 * 50, true, null, null, this.empty_annotations)
+            this.device.name = 'lightpad'
         },
         showCustomSizeForm() {
             this.$emit('show-custom-size-form')
@@ -85,8 +87,8 @@ export default {
             var grid = 50
 
             for (var i = 0; i < (this.canvas_width / grid); i++) {
-                canvas.add(new fabric.Line([i * grid, 0, i * grid, this.canvas_height], { stroke: '#ccc', selectable: false }))
-                canvas.add(new fabric.Line([ 0, i * grid, this.canvas_width, i * grid], { stroke: '#ccc', selectable: false }))
+                canvas.add(new fabric.Line([i * grid, 0, i * grid, this.canvas_height], { stroke: '#ccc', selectable: false, excludeFromExport: true }))
+                canvas.add(new fabric.Line([ 0, i * grid, this.canvas_width, i * grid], { stroke: '#ccc', selectable: false, excludeFromExport: true }))
             }
             
             canvas.on('object:moving', function(options) {
@@ -98,7 +100,7 @@ export default {
 
             this.canvas = canvas
 
-            const helperObj = new fabric.Object({})    //abstract invisible object
+            const helperObj = new fabric.Object({excludeFromExport: true})    //abstract invisible object
             helperObj.set("selectable", false)         //so the user is not able to select and modify it manually
             this.canvas.add(helperObj)
 
@@ -168,6 +170,7 @@ export default {
                 square.strokeUniform = true
                 square.hoverCursor = 'default'
                 this.device = square
+                square.excludeFromExport = true
             }
 
             this.canvas.renderAll()
@@ -187,6 +190,7 @@ export default {
                 radius: width / 2,
                 hasRotatingPoint: false,
                 inter_type: type,
+                inter_osc_address: annotations.osc_address,
                 inter_osc_args: annotations.osc_args,
                 min: annotations.min,
                 max: annotations.max,
@@ -217,6 +221,7 @@ export default {
                 cornerStyle: 'circle',
                 hasRotatingPoint: false,
                 inter_type: type,
+                inter_osc_address: annotations.osc_address,
                 inter_osc_args: annotations.osc_args,
                 min: annotations.min,
                 max: annotations.max,
@@ -250,6 +255,7 @@ export default {
                 radius: width / 3.3,
                 hasRotatingPoint: false,
                 inter_type: type,
+                inter_osc_address: annotations.osc_address,
                 inter_osc_args: annotations.osc_args,
                 min: annotations.min,
                 max: annotations.max,
@@ -266,6 +272,19 @@ export default {
 
             this.canvas.renderAll()
         },
+        exportCanvasToJson() {
+            return JSON.stringify(this.canvas.toJSON(
+                [
+                    'inter_type',
+                    'inter_osc_address',
+                    'inter_osc_args',
+                    'min',
+                    'max',
+                    'init',
+                    'incr'
+                ]
+            ))
+        }
     }
 }
 </script>

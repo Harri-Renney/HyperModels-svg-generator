@@ -2,7 +2,7 @@
     <div class="top-menu-bar">
         <div class="top-menu-bar-controls">
             <span id="page-title">Annotated SVG Creator</span>
-            <button id="top-menu-export-button" class="top-menu-control" @click="callApi">
+            <button id="top-menu-export-button" class="top-menu-control" @click="showExportMenu">
                 <i class="mi-export"/>
                 Export
             </button>
@@ -45,6 +45,9 @@ export default {
         }
     },
     methods: {
+        showExportMenu() {
+            this.$emit('show-export-menu')
+        },
         selectDevice() {
             this.$emit('change-device', this.device)
         },

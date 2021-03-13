@@ -32,7 +32,10 @@
                     class="dropdown control-picker"
                     v-model="controltype">
                     <option selected value="pad">Pad</option>
-                    <option value="slider">Slider</option>
+                    <option value="toggle">Toggle</option>
+                    <option value="horz_slider">Horizontal Slider</option>
+                    <option value="vert_slider">Vertical Slider</option>
+                    <option value="ciPad">ciPad</option>
                     <option value="endless">Endless</option>
                 </select>
             </div>
