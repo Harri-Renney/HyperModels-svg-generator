@@ -20,7 +20,6 @@
                     v-model="controlshape">
                     <option selected value="square">Square</option>
                     <option value="circle">Circle</option>
-                    <option value="triangle">Triangle</option>
                     <option value="ring">Ring</option>
                 </select>
             </div>
@@ -32,7 +31,10 @@
                     class="dropdown control-picker"
                     v-model="controltype">
                     <option selected value="pad">Pad</option>
-                    <option value="slider">Slider</option>
+                    <option value="toggle">Toggle</option>
+                    <option value="horz_slider">Horizontal Slider</option>
+                    <option value="vert_slider">Vertical Slider</option>
+                    <option value="ciPad">ciPad</option>
                     <option value="endless">Endless</option>
                 </select>
             </div>
@@ -40,32 +42,32 @@
             <div class="annotations">
                 <div class="item">
                     <label for="osc-address" class="label">OSC Address:</label>
-                    <input type="text" v-model="annotations.osc_address" class="text-input"/>
+                    <input type="text" v-model="annotations.osc_address" class="text-input" placeholder="/stop/"/>
                 </div>
 
                 <div class="item">
                     <label for="osc-args" class="label">OSC Arguments:</label>
-                    <input type="text" v-model="annotations.ocs_args" class="text-input"/>
+                    <input type="text" v-model="annotations.osc_args" class="text-input" placeholder="101 102... (Space separated)"/>
                 </div>
 
                 <div class="item">
                     <label for="min" class="label">Minimum Value:</label>
-                    <input type="text" v-model="annotations.min" class="text-input"/>
+                    <input type="text" v-model="annotations.min" class="text-input" placeholder="0"/>
                 </div>
 
                 <div class="item">
                     <label for="max" class="label">Maximum Value:</label>
-                    <input type="text" v-model="annotations.max" class="text-input"/>
+                    <input type="text" v-model="annotations.max" class="text-input" placeholder="100"/>
                 </div>
 
                 <div class="item">
                     <label for="init" class="label">Initial Value:</label>
-                    <input type="text" v-model="annotations.init" class="text-input"/>
+                    <input type="text" v-model="annotations.init" class="text-input" placeholder="50"/>
                 </div>
                 
                 <div class="item">
                     <label for="incr" class="label">Increment Value:</label>
-                    <input type="text" v-model="annotations.incr" class="text-input"/>
+                    <input type="text" v-model="annotations.incr" class="text-input" placeholder="10"/>
                 </div>
             </div>
 
