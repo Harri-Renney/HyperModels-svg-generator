@@ -1,4 +1,14 @@
 <template>
+    <transition
+    name="show-hide-delete-button"
+    enter-active-class="animate__animated animate__fadeInDown animate__faster"
+    leave-active-class="animate__animated animate__fadeOutUp animate__faster"
+    >
+    <div class="delete-button" v-if="showDeleteButton" @click="deleteShape()">
+        Delete Selected Shape
+        <i class="mi-delete"></i>
+    </div>
+    </transition>
     <div id="canvas" class="canvas">
         <canvas id="c"></canvas>
     </div>
@@ -15,6 +25,7 @@ export default {
             canvas: null,
             device: null,
             objects: [],
+            showDeleteButton: false,
             empty_annotations: {
                 osc_address: null,
                 osc_args: null,
@@ -41,6 +52,16 @@ export default {
         }
     },
     methods: {
+        deleteShape() {
+            var index = this.objects.indexOf(this.canvas.getActiveObject())
+
+            if (index > -1) {
+                this.objects.splice(index, 1)
+            }
+
+            this.canvas.remove(this.canvas.getActiveObject())
+            this.showDeleteButton = false
+        },
         changeDevice(device) {
             switch(device) {
                 case "sensel-morph":
@@ -57,7 +78,7 @@ export default {
                     this.clearDevice()
                     break
             }
-            this.objects.forEach(object => this.canvas.bringToFront(object.object))
+            this.objects.forEach(object => this.canvas.bringToFront(object))
         },
         drawSenselMorph() {
             this.clearDevice()
@@ -104,6 +125,14 @@ export default {
             helperObj.set("selectable", false)         //so the user is not able to select and modify it manually
             this.canvas.add(helperObj)
 
+            this.canvas.on("mouse:down", (options) => {
+                if (options.target && this.objects.includes(options.target)) {
+                    this.showDeleteButton = true
+                } else {
+                    this.showDeleteButton = false
+                }
+            })
+
             this.canvas.on("object:added", () => {
                 //workaround - selecting all objects to enable object controls
 
@@ -123,9 +152,6 @@ export default {
                     break
                 case 'circle':
                     this.addCircle(size * 50, size * 50, color, type, annotations)
-                    break
-                case 'triangle':
-                    this.addTriangle(size * 50, size * 50, color, type, annotations)
                     break
                 case 'ring':
                     this.addRing(size * 50, size * 50, color, type, annotations)
@@ -163,7 +189,7 @@ export default {
 
             if (!device) {
                 this.canvas.setActiveObject(square)
-                this.objects.push({'shape': 'square', 'object': square})
+                this.objects.push(square)
             } else {
                 square.stroke = '#' + Math.floor(Math.random()*16777215).toString(16)
                 square.strokeWidth = 5
@@ -203,38 +229,7 @@ export default {
             })
 
             this.canvas.add(circle)
-            this.objects.push({'shape': 'circle', 'object': circle})
-
-            this.canvas.renderAll()
-        },
-        addTriangle(width = 50, height = 50, color, type, annotations) {
-            var triangle = new fabric.Triangle({
-                left: 200,
-                top: 200,
-                width: width,
-                height: height,
-                fill: color,
-                originX: "left",
-                originY: "top",
-                evented: true,
-                transparentCorners: false,
-                cornerStyle: 'circle',
-                hasRotatingPoint: false,
-                inter_type: type,
-                inter_osc_address: annotations.osc_address,
-                inter_osc_args: annotations.osc_args,
-                min: annotations.min,
-                max: annotations.max,
-                init: annotations.init,
-                incr: annotations.incr,
-            })
-
-            triangle.setControlsVisibility({
-                mtr: false,
-            })
-
-            this.canvas.add(triangle)
-            this.objects.push({'shape': 'triangle', 'object': triangle})
+            this.objects.push(circle)
 
             this.canvas.renderAll()
         },
@@ -246,13 +241,13 @@ export default {
                 height: height,
                 fill: "rgba(0, 0, 0, 0)",
                 stroke: color,
-                strokeWidth: width / 2.5,
+                strokeWidth: width / 4,
                 originX: "left",
                 originY: "top",
                 evented: true,
                 transparentCorners: false,
                 cornerStyle: 'circle',
-                radius: width / 3.3,
+                radius: width / 2.65,
                 hasRotatingPoint: false,
                 inter_type: type,
                 inter_osc_address: annotations.osc_address,
@@ -268,7 +263,7 @@ export default {
             })
 
             this.canvas.add(ring)
-            this.objects.push({'shape': 'ring', 'object': ring})
+            this.objects.push(ring)
 
             this.canvas.renderAll()
         },
@@ -296,4 +291,37 @@ export default {
     left: 250px;
     top: 50px;
 }
+
+.delete-button {
+    z-index: 99;
+    position: absolute;
+    top: 55px;
+    width: 200px;
+    margin-left: 900px;
+    margin-right: auto;
+    background-color: #EF476F;
+    color: #F4F4F9;
+    height: 25px;
+    line-height: 25px;
+    padding: 5px;
+    text-align: center;
+    border: 2px solid #2F4550;
+    border-radius: 5px;
+}
+
+.delete-button:hover {
+    background-color: #EF587F;
+    cursor: pointer;
+}
+
+.delete-button:active {
+    background-color: #DE698F;
+    cursor: pointer;
+}
+
+.delete-button i {
+    font-size: 25px;
+    float: right;
+}
+
 </style>

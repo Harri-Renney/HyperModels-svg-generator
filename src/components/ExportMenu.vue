@@ -4,15 +4,8 @@
             <div class="menu">
                 <div class="welcome-message">
                     <span class="title">Export Layout</span><br/>
-                    Pick an export type and filename below.
+                    Enter the filename below...
                 </div>
-                <div class="item dropdown">
-                    <label for="filetype">Filetype</label>
-                    <select name="filetype" class="dropdown" v-model="filetype">
-                        <option value="svg" selected>SVG (Scalable Vector Graphics)</option>
-                    </select>
-                </div>
-
                 <div class="item text">
                     <input required type="text" id="filename" v-model="filename" placeholder="MyLayout1.svg">
                 </div>
@@ -36,7 +29,6 @@ export default {
     name: 'ExportMenu',
     data() {
         return {
-            filetype: 'svg',
             filename: '',
         }
     },
@@ -49,43 +41,51 @@ export default {
             return result ? "rgb(" + parseInt(result[1], 16) + "," + parseInt(result[2], 16) + "," + parseInt(result[3], 16) + ")" : null;
         },
         exportCanvas() {
-            if (this.filetype == '' || this.filename == '') {
-                alert('You must pick a filetype and filename')
+            if (this.filename == '') {
+                alert('You must enter filename')
                 return
             }
 
-            switch (this.filetype) {
-                case 'svg':
-                    // console.log(this)
-                    var json = JSON.parse(this.$parent.$root.$refs.canvas.exportCanvasToJson())
-                    var device = this.$parent.$root.$refs.canvas.device
-                    
-                    var svg = "<svg xmlns='http://www.w3.ord/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' height='" + (device ? device.height / 50 : 20) + "mm' viewbox='0 0 " + (device ? device.height / 50 : 20) + " " + (device ? device.width / 50 : 20) + "' width='"  + (device ? device.width / 50 : 20) + "mm' version='1.11.1' interface_device='" + device.name + "'>"
-                    
-                    json.objects.forEach(function (control, hexToRgb) {
-                        switch (control.type) {
-                            case 'rect':
-                                if (control.inter_type == 'pad') {
-                                    svg += "<" + control.type + " interface_osc_address='" + control.inter_osc_address + "' interface_type='" + control.inter_type + "' interface_osc_args='" + control.inter_osc_args + "' width='" + control.width / 50 + "' height='" + control.height / 50 + "' x='" + ((control.left - 200) / 50) + "' y='" + ((control.top - 50) / 50) + "' style='fill:" + hexToRgb(control.fill) + ";'></" + control.type + ">"
-                                }
-                                if (control.inter_type.endsWith("_slider")) {
-                                    svg += "<" + control.type + " interface_osc_address='" + control.inter_osc_address + "' interface_type='" + control.inter_type + "' interface_osc_args='" + control.inter_osc_args + "' width='" + control.width / 50 + "' height='" + control.height / 50 + "' x='" + ((control.left - 200) / 50) + "' y='" + ((control.top - 50) / 50) + "' style='fill:" + hexToRgb(control.fill) + ";' max='" + control.max + "' min='" + control.min + "'></" + control.type + ">"
-                                }
-                                break
-                            case 'circle':
-                                svg += "<" + control.type + " r='" + control.radius + "' cx='" + ((control.left - 200) + control.radius + control.strokeWidth) + "' cy='" + ((control.top - 50) + control.strokeWidth) + "' style='fill:" + hexToRgb(control.fill) + ";stroke-width:" + control.strokeWidth + ";stroke:" + control.stroke + "'></" + control.type + ">"
+            var json = JSON.parse(this.$parent.$root.$refs.canvas.exportCanvasToJson())
+            console.log(json)
+            var device = this.$parent.$root.$refs.canvas.device
+
+            var svg = "<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' height='" + 
+                (device ? device.height / 50 : 20) + "mm' viewbox='0 0 " + (device ? device.height / 50 : 20) + " " + 
+                (device ? device.width / 50 : 20) + "' width='"  + (device ? device.width / 50 : 20) + 
+                "mm' version='1.11.1' interface_device='" + device.name + "'>"
+            
+            json.objects.forEach((control) => {
+                switch (control.type) {
+                    case 'rect':
+                        if (control.inter_type == 'pad') {
+                            svg += "<" + control.type + " interface_osc_address='" + control.inter_osc_address + "' interface_type='" + control.inter_type +
+                            "' interface_osc_args='" + control.inter_osc_args + "' width='" + Math.round((control.width / 50) * control.scaleX) + "' height='" + 
+                            Math.round((control.height / 50) * control.scaleY) + "' x='" + ((control.left - 200) / 50) + "' y='" + ((control.top - 50) / 50) + 
+                            "' style='fill:" + this.hexToRgb(control.fill) + ";'/>"
                         }
-                    })
+                        if (control.inter_type.endsWith("_slider")) {
+                            svg += "<" + control.type + " interface_osc_address='" + control.inter_osc_address + "' interface_type='" + control.inter_type + 
+                            "' interface_osc_args='" + control.inter_osc_args + "' width='" + Math.round((control.width / 50) * control.scaleX) + "' height='" + 
+                            Math.round((control.height / 50) * control.scaleY) + "' x='" + ((control.left - 200) / 50) + "' y='" + ((control.top - 50) / 50) + 
+                            "' style='fill:" + this.hexToRgb(control.fill) + ";' max='" + control.max + "' min='" + control.min + "' init='" + control.init + 
+                            "' incr='" + control.incr + "'/>"
+                        }
+                        break
+                    case 'circle':
+                        svg += "<ellipse rx='" + (control.radius / 50) * control.scaleX + "' ry='" + (control.radius / 50) * control.scaleY + "' cx='" + 
+                        ((control.left - 200 + (control.strokeWidth / 2)) + (control.radius * control.scaleX)) / 50 + "' cy='" + ((control.top - 50 + 
+                        (control.strokeWidth / 2)) + (control.radius * control.scaleY)) / 50 + "' style='fill:" + (this.hexToRgb(control.fill) ?? 'rgba(0, 0, 0, 0)') + ";stroke-width:" +
+                        control.strokeWidth / 50 + ";stroke:" + control.stroke + "'></ellipse>"
+                }
+            })
 
-                    svg += "</svg>"
 
-                    var blob = new Blob([svg], {type: "image/svg+xml"})
+            svg += "</svg>"
 
-                    saveAs.saveAs(blob, (this.filename.endsWith('.svg') ? this.filename : this.filename + ".svg"))
+            var blob = new Blob([svg], {type: "image/svg+xml"})
 
-                    console.log(svg)
-                    break
-            }
+            saveAs.saveAs(blob, (this.filename.endsWith('.svg') ? this.filename : this.filename + ".svg"))
         }
     }
 }
