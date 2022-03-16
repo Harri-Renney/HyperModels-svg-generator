@@ -144,6 +144,9 @@ export default {
         displaySignUpForm() {
             this.showSignUpForm = true;
         },
+        setCustomSizeDevice(custom_size){
+            this.$refs.canvas.setCustomSizeDevice(custom_size)
+        },
         addControl(color, size, type, shape, annotations) {
             this.$refs.canvas.addControl(color, size, type, shape, annotations)
         },

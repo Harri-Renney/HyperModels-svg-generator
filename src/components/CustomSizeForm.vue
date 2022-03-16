@@ -52,8 +52,8 @@ export default {
                 custom_width: null,
                 custom_height: null,
             },
-            width_unit: 'grid',
-            height_unit: 'grid',
+            width_unit: 'px',
+            height_unit: 'px',
         }
     },
     methods: {
@@ -62,6 +62,8 @@ export default {
         },
         onSubmit() {
             this.$emit('set-custom-size-device', this.custom_size)
+            // this.device.height = this.custom_size.custom_height
+            // this.device.width = this.custom_size.custom_width
         }
     }
 }

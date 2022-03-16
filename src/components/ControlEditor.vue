@@ -9,7 +9,7 @@
 
             <div class="item">
                 <label for="size-picker" class="label">Size:</label>
-                <input type="number" min="1" max="9" v-model="size" class="size-picker"/>
+                <input type="number" min="1" max="90" v-model="size" class="size-picker"/>
             </div>
 
             <div class="item">
@@ -21,6 +21,7 @@
                     <option selected value="square">Square</option>
                     <option value="circle">Circle</option>
                     <option value="ring">Ring</option>
+                    <option value="line">Line</option>
                 </select>
             </div>
 
@@ -69,6 +70,11 @@
                     <label for="incr" class="label">Increment Value:</label>
                     <input type="text" v-model="annotations.incr" class="text-input" placeholder="10"/>
                 </div>
+
+                    <div>
+        <!-- <label for="physics_eq" class="physics-box" style="">Physics Equations:</label> -->
+        <textarea id="physics_eq" name="textarea" v-model="annotations.physicsEq" style="width:1250px;height:150px;position:absolute;top:750px;z-index: 99;left:250px;"></textarea>
+    </div>
             </div>
 
             <div class="item always-show add">
@@ -82,7 +88,7 @@
 </template>
 
 <script>
-
+import $ from 'jquery'
 export default {
     name: 'ControlEditor',
     data () {
@@ -100,17 +106,63 @@ export default {
                 max: '',
                 init: '',
                 incr: '',
+                //@Highlight - Physics modelling.
+                physicsEq: '',
+                physicsKernel: '',
             }
         }
     },
     methods: {
         addControl() {
-            if (this.color == '' || this.size <= 0 || this.size >= 10 || this.controltype == '' || this.controlshape == '') {
+            if (this.color == '' || this.size <= 0 || this.size >= 90 || this.controltype == '' || this.controlshape == '') {
                 alert("You must select a value for all inputs.")
                 return
             }
 
             this.$emit('add-control', this.color, this.size, this.controltype, this.controlshape, this.annotations)
+
+            
+
+            //let physicsEqStr = document.getElementById("physics_eq").value
+            //this.toPython(physicsEqStr)
+        },
+        toPython(usrdata){
+            // $.ajax({
+            //     url: 'http://192.168.0.6:8080',
+            //     headers: {  'Access-Control-Allow-Origin' : 'http://192.168.0.6:8080' },
+            //     type: "POST",
+            //     crossDomain: true,
+            //     data: { information : "You have a very nice website, sir." , userdata : usrdata },
+            //     dataType: "json",
+            //     success: function(data) {
+            //         //<!-- do something here -->
+            //         $('#temp').html(data)
+            //         //console.log("You have a very nice website, sir." + data);
+            //     }})
+            console.log(usrdata);
+            // $.ajax({
+            //     url: 'http://localhost/api/',
+            //     type: "POST",
+            //     data: {},
+            //     dataType: 'json',
+            //     contentType: 'application/json; charset=utf-8'
+            // })
+            // $.ajax({
+            //     type: "POST",
+            //     url: "http://127.0.0.1:8000/",
+            //     data: { param: usrdata}
+            //     });
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/parse",
+                async: false,
+                data: { mydata: usrdata },
+                success: function(data) {
+                    //<!-- do something here -->
+                    console.log("You have a very nice website, sir." + data.name);
+                }
+            });
+
         },
         expandCollapse() {
             this.expand = !this.expand

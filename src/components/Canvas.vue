@@ -4,18 +4,32 @@
     enter-active-class="animate__animated animate__fadeInDown animate__faster"
     leave-active-class="animate__animated animate__fadeOutUp animate__faster"
     >
-    <div class="delete-button" v-if="showDeleteButton" @click="deleteShape()">
-        Delete Selected Shape
-        <i class="mi-delete"></i>
-    </div>
+            <div class="delete-button" v-if="showDeleteButton">
+                <div @click="deleteShape()">
+                    Delete Selected Shape
+                    <i class="mi-delete"></i>
+                </div>
+            </div>
     </transition>
+    <!-- <transition
+    name="show-hide-delete-button"
+    enter-active-class="animate__animated animate__fadeInDown animate__faster"
+    leave-active-class="animate__animated animate__fadeOutUp animate__faster"
+    >
+        <div v-if="showDeleteButton">
+            <label for="physics_eq" class="physics-box" style="">Physics Equations:</label>
+            <textarea id="physics_eq" name="textarea" v-model="annotations.physicsEq" style="width:1250px;height:150px;position:absolute;top:500px;z-index: 99;"></textarea>
+        </div>
+    </transition> -->
     <div id="canvas" class="canvas">
         <canvas id="c"></canvas>
     </div>
-</template>
 
+</template>
 <script>
+
 import { fabric } from 'fabric'
+//import $ from 'jquery'
 export default {
     name: 'Canvas',
     data() {
@@ -33,12 +47,16 @@ export default {
                 max: null,
                 init: null,
                 incr: null,
+                physicsEq: null,
+                physicsKernel: null,
             }
         }
     },
     mounted() {
         this.canvas_height = window.innerHeight
         this.canvas_width = window.innerWidth - 250
+
+        //this.toPython("42")
 
         this.drawGrid()
     },
@@ -72,6 +90,7 @@ export default {
                     break
                 case "custom":
                     this.showCustomSizeForm()
+                    this.drawCustomDevice(device.width, device.height)
                     break
                 case "none":
                 default:
@@ -92,11 +111,14 @@ export default {
             this.addSquare(15 * 50, 15 * 50, true, null, null, this.empty_annotations)
             this.device.name = 'lightpad'
         },
+        // @Highlight - Need to add how to add square to custom form size. Right now nothing?
         showCustomSizeForm() {
             this.$emit('show-custom-size-form')
         },
         drawCustomDevice(width, height) {
-            this.addSquare(width * 50, height * 50, true, null, null, this.empty_annotations)
+            this.clearDevice()
+            this.addSquare(parseInt(width), parseInt(height), true, null, null, this.empty_annotations)
+            this.device.name = 'custom'
         },
         clearDevice() {
             this.canvas.remove(this.device)
@@ -114,8 +136,8 @@ export default {
             
             canvas.on('object:moving', function(options) {
                 options.target.set({
-                    left: Math.round(options.target.left / grid) * grid,
-                    top: Math.round(options.target.top / grid) * grid
+                    left: options.target.left,
+                    top: options.target.top
                 })
             })
 
@@ -145,6 +167,13 @@ export default {
                 this.canvas.requestRenderAll()
             })
         },
+        setCustomSizeDevice(custom_size){
+            console.log(custom_size.custom_width)
+            console.log(custom_size.custom_height)
+            this.device.width = custom_size.custom_width
+            this.device.height = custom_size.custom_height
+            this.drawCustomDevice(custom_size.custom_width, custom_size.custom_height)
+        },
         addControl(color, size, type, shape, annotations) {
             switch (shape) {
                 case 'square':
@@ -156,7 +185,28 @@ export default {
                 case 'ring':
                     this.addRing(size * 50, size * 50, color, type, annotations)
                     break
+                case 'line':
+                    this.addLine(false, color, type, annotations)
+                    break
             }
+            this.objects[this.objects.length-1].physicsKernel = this.objects[this.objects.length-1].physicsEq;
+            // @Highlight - Generate code for each equation.
+            // let generatedCode =  this.objects[this.objects.length-1].physicsEq;
+            // $.ajax({
+            //     type: "POST",
+            //     url: "http://127.0.0.1:5000/parse",
+            //     async: false,
+            //     data: { mydata: generatedCode },
+            //     success: function(data) {
+            //         //<!-- do something here -->
+            //         generatedCode = data.name;
+            //     }
+            // });
+            // this.objects[this.objects.length-1].physicsKernel = generatedCode;
+            // console.log(this.objects[this.objects.length-1].physicsKernel)
+
+            // @Highlight - Don't generate code yet.
+            console.log(this.objects[this.objects.length-1].physicsEq)
         },
         addSquare(width = 100, height = 100, device = false, color, type, annotations) {
             var square = new fabric.Rect({
@@ -179,6 +229,10 @@ export default {
                 max: annotations.max,
                 init: annotations.init,
                 incr: annotations.incr,
+
+                //@Highlight - Physical Modelling attributes
+                physicsEq: annotations.physicsEq,
+                physicsKernel: '',
             })
 
             square.setControlsVisibility({
@@ -222,6 +276,10 @@ export default {
                 max: annotations.max,
                 init: annotations.init,
                 incr: annotations.incr,
+
+                //@Highlight - Physical Modelling attributes
+                physicsEq: annotations.physicsEq,
+                physicsKernel: '',
             })
 
             circle.setControlsVisibility({
@@ -256,6 +314,10 @@ export default {
                 max: annotations.max,
                 init: annotations.init,
                 incr: annotations.incr,
+
+                //@Highlight - Physical Modelling attributes
+                physicsEq: annotations.physicsEq,
+                physicsKernel: '',
             })
 
             ring.setControlsVisibility({
@@ -264,6 +326,38 @@ export default {
 
             this.canvas.add(ring)
             this.objects.push(ring)
+
+            this.canvas.renderAll()
+        },
+        addLine(device = false, color, type, annotations) {
+            var line = new fabric.Path('M 100 100 200 100', {
+                fill: !device ? color : 'rgba(0, 0, 0, 0)',
+                stroke: color,
+                strokeWidth: 1,
+                evented: true,
+                originX: "left",
+                originY: "top",
+                selectable: !device,
+                hasRotatingPoint: false,
+                inter_type: type,
+                inter_osc_address: annotations.osc_address,
+                inter_osc_args: annotations.osc_args,
+                min: annotations.min,
+                max: annotations.max,
+                init: annotations.init,
+                incr: annotations.incr,
+
+                //@Highlight - Physical Modelling attributes
+                physicsEq: annotations.physicsEq,
+                physicsKernel: '',
+            })
+
+            line.setControlsVisibility({
+                mtr: false,
+            })
+
+            this.canvas.add(line)
+            this.objects.push(line)
 
             this.canvas.renderAll()
         },
@@ -276,7 +370,8 @@ export default {
                     'min',
                     'max',
                     'init',
-                    'incr'
+                    'incr',
+                    'physicsKernel'
                 ]
             ))
         }
@@ -290,6 +385,21 @@ export default {
     position: absolute;
     left: 250px;
     top: 50px;
+}
+
+.physics-box {
+    z-index: 99;
+    position: absolute;
+    top: 450px;
+    width: 200px;
+    background-color: #EF476F;
+    color: #F4F4F9;
+    height: 25px;
+    line-height: 25px;
+    padding: 5px;
+    text-align: center;
+    border: 2px solid #2F4550;
+    border-radius: 5px;
 }
 
 .delete-button {
